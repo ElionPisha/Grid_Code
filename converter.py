@@ -2,6 +2,7 @@ import h5py
 import json
 mode = 'r'
 path = 'gridcode/AMMICAL-DV.h5'
+secondFilePath = 'gridcode/AMMICAL-DV1.h5'
 
 def generate_json(group):
     result = {}
@@ -16,12 +17,22 @@ def generate_json_again(group):
         result[attr] = group.attrs.get(attr)
     return result
 
-
-with h5py.File(path, mode) as hdf:
+def convert(hdf5File):
     result = {}
     for key in hdf.keys():
         groupObject = hdf.get(key)
         group = dict(groupObject.items())
         result[key] = generate_json(group)
+    return result
+
+
+with h5py.File(path, mode) as hdf:
+    result = convert(hdf)
+    print(json.dumps(str(result), indent=10, sort_keys=True))
+    hdf.close()
+
+
+with h5py.File(secondFilePath, mode) as hdf:
+    result = convert(hdf)
     print(json.dumps(str(result), indent=10, sort_keys=True))
     hdf.close()
