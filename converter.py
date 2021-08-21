@@ -4,6 +4,16 @@ mode = 'r'
 path = 'gridcode/AMMICAL-DV.h5'
 secondFilePath = 'gridcode/AMMICAL-DV1.h5'
 
+
+def convert(hdf5File):
+    result = {}
+    for key in hdf5File.keys():
+        groupObject = hdf5File.get(key)
+        group = dict(groupObject.items())
+        result[key] = generate_json(group)
+    return result
+
+
 def generate_json(group):
     result = {}
     for groupKey in group.keys():
@@ -17,13 +27,7 @@ def generate_json_again(group):
         result[attr] = group.attrs.get(attr)
     return result
 
-def convert(hdf5File):
-    result = {}
-    for key in hdf.keys():
-        groupObject = hdf.get(key)
-        group = dict(groupObject.items())
-        result[key] = generate_json(group)
-    return result
+
 
 
 with h5py.File(path, mode) as hdf:
